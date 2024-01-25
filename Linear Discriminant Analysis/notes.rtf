@@ -1,0 +1,22 @@
+Assumptions and caveats
+As useful as LDA is, it relies on several assumptions. Some of these assumptions arise because LDA relies on linear algebra. In order for all the necessary linear algebra tricks to work out, a data set has to have some specific properties.
+
+Class size versus the number of variables
+LDA only works if the size of the smallest class is greater than the number of variables. If you have 10 variables and a class with only 8 observations, then LDA simply won’t work. (The technical reason for this is that LDA works by inverting a class’s covariance matrix, and that matrix won’t be invertible if you don’t have more observations than variables.)
+
+Normal variables
+LDA relies on the assumption that independent variables in each class are multivariate normal. The technical definition of a multivariate normal distribution is that any linear combination of variables must be univariate normal (the univariate normal distribution is the familiar bell-shaped normal curve). Don’t worry too much about the technical definition: in some applications it’s fine to look at histograms of variables within each class and see if they look close enough to a bell curve.
+
+Homoscedasticity
+Homoscedasticity is the assumption that each class has the same covariance matrix. Intuitively this means that a scatter plot of one class has roughly the same size and shape as the scatter plot of every other class. If the values in one class are spread very far apart and the values in another class are clumped close together, or if the scatter plots of two classes are shaped like long, narrow ellipses that are perpendicular to one another, then LDA won’t perform well. If, however, all scatter plots look similar, LDA can be applied. (Side note: if you compute the sample covariance matrices for each class in a data set, the matrices will almost never be exactly the same. It’s okay if they’re close enough.)
+
+For cases when other assumptions hold true but the data is not homoscedastic, there is a technique called quadratic discriminant analysis (QDA). QDA is very similar to LDA, but it can be used when classes have different covariance matrices.
+
+Other considerations
+Another assumption of LDA is that independent variables are not multicolinear. This means that no variable is closely correlated with any other variable or linear combination of variables. This particular assumption is not as strict as the other assumptions, but it’s good to be aware that LDA will generally perform worse on a data set with multicolinear variables.
+
+Another consideration for LDA is that the observations in your data set should be statistically independent. If you have dependent variables (for example, multiple observations of the same subjects over time), LDA shouldn’t be applied.
+
+It’s also important to note that LDA can be sensitive to outliers. If a data set has extreme outliers it may be best to remove them before doing LDA.
+
+Finally, it’s good to be aware that LDA is prone to overfitting. Scikit-learn’s implementation of LDA addresses this by using a shrinkage parameter. This is a regularization technique for LDA that helps to prevent overfitting. We won’t address this any further here, but it’s something to be aware of if you use LDA in the future.

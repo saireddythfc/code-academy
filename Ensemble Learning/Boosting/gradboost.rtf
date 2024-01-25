@@ -1,0 +1,61 @@
+Gradient Boosting Overview
+Gradient Boosting is a sequential ensembling method that can be used for both classification and regression. It can use any base machine learning model, though it is most commonly used with decision trees, known as Gradient Boosted Trees.
+
+For Gradient Boost, the Sequential Fitting Method is accomplished by fitting a base model to the negative gradient of the error in the previous stage. The Aggregation Method is a weighted sum of those base models where the model weight is constant.
+
+The training of a Gradient Boosted model is the process of determining the base model error at each step and using those to determine how to best formulate the subsequent base model.
+
+Now we will take a deeper look at how Gradient Boosting works. While Gradient Boosting can be applied to any base machine learning model, decision trees are commonly used in practice. In this example we will be focusing on a Gradient Boosted Trees model.
+
+Our first step is to fit an estimator, the 1st Base Model. Recall that the base estimators for boosting algorithms tend to be simple and high bias. In contrast to AdaBoost which leveraged the simplest form of decision trees, the decision stump with only 1 level, gradient boosted trees can and actually do tend to include a few more decision branches. Often gradient boosted trees will have up to 32 leaf nodes, which corresponds to a tree depth of 5 levels. In this example, we are limiting the depth of the base estimators to 2, corresponding to 4 leaf nodes.
+
+Once the 1st Base Model is trained, the residual errors (h_1), of the model given the training training data are determined. The residual error is the difference between the actual and predicted values for each of the training data instances.
+
+ℎ
+1
+=
+�
+actual
+−
+�
+1
+(predicted)
+h 
+1
+​
+ =y 
+actual
+​
+ −y 
+1(predicted)
+​
+ 
+The errors will be greater for the training data instances where the model did not do as good of a job with its prediction and will be lower on training data instances where the model fit the data well.
+
+In the next stage of the sequential learning process, we fit the 2nd Base Model. Here is where the interesting part comes in. Instead of fitting the model to the target values y_actual as we are typically used to doing in machine learning, we actually fit the model on the errors of the previous stage, in this case h_1. The 2nd Base Model is literally learning from the mistakes of the 1st Base Model through those residuals that were calculated.
+
+The results of the 2nd Base Model are multiplied by a constant learning rate, alpha, and added to the results of the 1st Base Model to give the set of updated predictions, The results of the second base model, which was tasked with fitting the errors of the first base model are multiplied by a constant learning rate, alpha and added to the results of the first base model to give us a set of updated predictions, y_2(predicted).
+
+The residual errors of the 2nd stage are calculated using the updated predictions to get,
+
+ℎ
+2
+=
+�
+actual
+−
+�
+2(predicted)
+h 
+2
+​
+ =y 
+actual
+​
+ −y 
+2(predicted)
+​
+ 
+The subsequent stages repeat the same steps. At stage N, the base model is fit on the errors calculated at the previous stage h_(N-1). The new model that is fit is multiplied by the constant learning rate alpha and added to the predictions of the previous stage.
+
+Once we have reached the predefined number of estimators for our Gradient Boosting model or the residual errors are not changing between iterations, the model will stop training and we end up with the resultant ensemble model.
